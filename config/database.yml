@@ -1,0 +1,40 @@
+# SQLite version 3.x
+#   gem install sqlite3
+#
+#   Ensure the SQLite 3 gem is defined in your Gemfile
+#   gem 'sqlite3'
+#
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  timeout: 5000
+  #host: db
+  host: localhost
+  username: postgres
+  password:
+  # user: gnpsllco_papaer
+  # password: sharma@123
+
+development:
+  <<: *default
+  database: rails_terraform_development
+  username: stitchfix_owner
+  password: stitchfix_owner
+  #paper_scammer_development
+  # user: postgres
+  # password: sharma@123
+
+# Warning: The database defined as "test" will be erased and
+# re-generated from your development database when you run "rake".
+# Do not set this db to the same as development or production.
+test:
+  <<: *default
+  database: rails_terraform_test
+  username: stitchfix_owner
+  password: stitchfix_owner
+  # user: postgres
+  # password: sharma@123
+
+production:
+  url: <%= ENV['DATABASE_URL'] %>
