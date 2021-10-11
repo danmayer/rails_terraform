@@ -8,6 +8,14 @@ REGION=us-east-1 terraform apply --var-file=production.tfvars
 
 updated gitignore to ensure secrets stay out of git
 
+### Secrets
+
+The original project had all the files with secrets checked in... These are no longer in git and are gitignored. To enable the project to run please copy over the sample files and then edit to add various secrets.
+
+* `cp modules/code_pipeline/main.tf.sample modules/code_pipeline/main.tf`
+* `cp staging.tfvars.sample staging.tfvars`
+* `cp production.tfvars.sample production.tfvars`
+
 ### Resources
 
   - Terraform https://www.terraform.io

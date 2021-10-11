@@ -1,0 +1,20 @@
+region                        = "us-east-1"
+domain                        = "danrailsterraform.com"
+githubtoken                   = "REPLACE_WITH_TOKEN"
+
+/* rds */
+database_name      = "danrailsterraform_production"
+database_username  = "danrailsterraform"
+database_password  = "MAKEPASS" 
+
+/* aws */
+aws_key        = "KEY"
+aws_secret_key = "SECRET_KEY"
+
+/* secret key make new one with `rake secret`*/
+secret_key_base    = "MAKE_ONE"
+
+rabbit_name = "Go Go DanSingh"
+environment = "production"
+
+availability_zones = ["us-east-1a", "us-east-1b"]
