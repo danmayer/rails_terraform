@@ -62,7 +62,7 @@ resource "aws_db_instance" "rds" {
   identifier             = "${var.environment}-database"
   allocated_storage      = "${var.allocated_storage}"
   engine                 = "postgres"
-  engine_version         = "9.6.6"
+  engine_version         = "9.6.22"
   instance_class         = "${var.instance_class}"
   multi_az               = "${var.multi_az}"
   name                   = "${var.database_name}"

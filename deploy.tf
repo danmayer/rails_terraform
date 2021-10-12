@@ -16,6 +16,109 @@ resource "aws_key_pair" "key" {
   public_key = file("terraform_rsa.pub")
 }
 
+resource "aws_s3_bucket" "b" {
+  bucket = "s3-website-explorer.test.com"
+  acl    = "public-read"
+  /*====
+  policy = file("policy.json")
+  ====*/  
+
+  website {
+    index_document = "index.html"
+    error_document = "error.html"
+
+    routing_rules = <<EOF
+[{
+    "Condition": {
+        "KeyPrefixEquals": "docs/"
+    },
+    "Redirect": {
+        "ReplaceKeyPrefixWith": "documents/"
+    }
+}]
+EOF
+  }
+}
+
+module "cdn" {
+  source = "terraform-aws-modules/cloudfront/aws"
+
+/*====
+  aliases = ["cdn.example.com"]
+======*/  
+
+  comment             = "My exploring CloudFront"
+  enabled             = true
+  is_ipv6_enabled     = true
+  price_class         = "PriceClass_All"
+  retain_on_delete    = false
+  wait_for_deployment = false
+
+  create_origin_access_identity = true
+  origin_access_identities = {
+    s3_bucket_one = "My awesome CloudFront can access"
+  }
+
+/*====
+  logging_config = {
+    bucket = "explore-logs-my-cdn.s3.amazonaws.com"
+  }
+======*/  
+
+  origin = {
+    something = {
+      /*====
+      move to using the output variable of the ELB
+      ======*/  
+      domain_name = "production-alb-rails-terraform-1182706652.us-east-1.elb.amazonaws.com"
+      custom_origin_config = {
+        http_port              = 80
+        https_port             = 443
+        origin_protocol_policy = "match-viewer"
+        origin_ssl_protocols   = ["TLSv1", "TLSv1.1", "TLSv1.2"]
+      }
+    }
+
+    s3_one = {
+      domain_name = "s3-website-explorer.test.com"
+      s3_origin_config = {
+        origin_access_identity = "s3_bucket_one"
+      }
+    }
+  }
+
+  default_cache_behavior = {
+    target_origin_id       = "something"
+    viewer_protocol_policy = "allow-all"
+
+    allowed_methods = ["GET", "HEAD", "OPTIONS"]
+    cached_methods  = ["GET", "HEAD"]
+    compress        = true
+    query_string    = true
+  }
+
+  ordered_cache_behavior = [
+    {
+      path_pattern           = "/static/*"
+      target_origin_id       = "s3_one"
+      viewer_protocol_policy = "redirect-to-https"
+
+      allowed_methods = ["GET", "HEAD", "OPTIONS"]
+      cached_methods  = ["GET", "HEAD"]
+      compress        = true
+      query_string    = true
+    }
+  ]
+
+  viewer_certificate = {
+    /*====
+    acm_certificate_arn = "arn:aws:acm:us-east-1:135367859851:certificate/1032b155-22da-4ae0-9f69-e206f825458b"
+    ssl_support_method  = "sni-only"
+    ======*/  
+    cloudfront_default_certificate = true
+  }
+}
+
 module "networking" {
   source               = "./modules/networking"
   environment          = var.environment
