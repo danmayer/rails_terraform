@@ -17,6 +17,7 @@ resource "aws_key_pair" "key" {
 }
 
 resource "aws_s3_bucket" "private_bucket" {
+  /*==== NOTE: you need to make a unique bucket name, perhaps move to variable  ====*/
   bucket = "s3-website-explorer-private.test.com"
   acl    = "private"
 
@@ -26,6 +27,7 @@ resource "aws_s3_bucket" "private_bucket" {
 }
 
 resource "aws_s3_bucket" "public_bucket" {
+  /*==== NOTE: you need to make a unique bucket name, perhaps move to variable  ====*/
   bucket = "s3-website-explorer-pub.test.com"
   acl    = "public-read"
   /*====
@@ -96,7 +98,7 @@ module "cdn" {
     }
 
     s3_two = {
-      domain_name = aws_s3_bucket.public_bucket.bucketname_s3_domain_name
+      domain_name = aws_s3_bucket.public_bucket.bucket_regional_domain_name
       custom_origin_config = {
         http_port              = 80
         https_port             = 443

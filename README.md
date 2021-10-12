@@ -22,12 +22,13 @@ updated `gitignore` to ensure secrets stay out of git
 
 ### What you get
 
-* Rails app via cloudfront: http://d3oohdglm7snik.cloudfront.net/
+* Rails app via cloudfront (NOTE: not via https): http://d3oohdglm7snik.cloudfront.net/
 * Rails app via alb: https://production-alb-rails-terraform-1182706652.us-east-1.elb.amazonaws.com/
 * public s3 bucket:
-	* via s3: https://s3.amazonaws.com/s3-website-explorer-pub.test.com/assets/batman.html
-	* via cloudfront: NOT WORKING: 
-* private s3 bucket: https://d3oohdglm7snik.cloudfront.net/assets/batman.html
+	* via s3 url: https://s3.amazonaws.com/s3-website-explorer-pub.test.com/assets/batman.html
+	* via website url (NOTE: not via https): http://s3-website-explorer-pub.test.com.s3.amazonaws.com/assets/batman.html
+	* via cloudfront (NOTE: not via https): http://d3oohdglm7snik.cloudfront.net/assets/batman.html
+* private s3 bucket:
 	* via s3 (private bucket but public read on the file): https://s3.amazonaws.com/s3-website-explorer-private.test.com/static/batman.html
 	* via cloudfront: https://d3oohdglm7snik.cloudfront.net/static/batman.html   
 
