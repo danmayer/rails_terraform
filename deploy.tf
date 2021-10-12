@@ -16,8 +16,17 @@ resource "aws_key_pair" "key" {
   public_key = file("terraform_rsa.pub")
 }
 
-resource "aws_s3_bucket" "b" {
-  bucket = "s3-website-explorer.test.com"
+resource "aws_s3_bucket" "private_bucket" {
+  bucket = "s3-website-explorer-private.test.com"
+  acl    = "private"
+
+  tags = {
+    Name = "A private bucket"
+  }
+}
+
+resource "aws_s3_bucket" "public_bucket" {
+  bucket = "s3-website-explorer-pub.test.com"
   acl    = "public-read"
   /*====
   policy = file("policy.json")
@@ -80,9 +89,19 @@ module "cdn" {
     }
 
     s3_one = {
-      domain_name = "s3-website-explorer.test.com"
+      domain_name = aws_s3_bucket.private_bucket.bucket_regional_domain_name
       s3_origin_config = {
         origin_access_identity = "s3_bucket_one"
+      }
+    }
+
+    s3_two = {
+      domain_name = aws_s3_bucket.public_bucket.bucketname_s3_domain_name
+      custom_origin_config = {
+        http_port              = 80
+        https_port             = 443
+        origin_protocol_policy = "match-viewer"
+        origin_ssl_protocols   = ["TLSv1", "TLSv1.1", "TLSv1.2"]
       }
     }
   }
@@ -102,6 +121,16 @@ module "cdn" {
       path_pattern           = "/static/*"
       target_origin_id       = "s3_one"
       viewer_protocol_policy = "redirect-to-https"
+
+      allowed_methods = ["GET", "HEAD", "OPTIONS"]
+      cached_methods  = ["GET", "HEAD"]
+      compress        = true
+      query_string    = true
+    },
+    {
+      path_pattern           = "/assets/*"
+      target_origin_id       = "s3_two"
+      viewer_protocol_policy = "allow-all"
 
       allowed_methods = ["GET", "HEAD", "OPTIONS"]
       cached_methods  = ["GET", "HEAD"]
