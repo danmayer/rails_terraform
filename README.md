@@ -18,7 +18,9 @@ updated `gitignore` to ensure secrets stay out of git
 * load balancer SSL termination (cloudfront https only and redirect http)
 * cleanup terraform deprecation warnings
 * some code comment todos
-* add rack::deflate and brotli compression
+* move rails app to diff repo
+* make rails app repo configurable via env vars
+* rails assets pushed to an S3 used via cloudfront for asset host, ensure Br compression
 
 ### What you get
 

@@ -1,4 +1,4 @@
-FROM ruby:2.5.3
+FROM ruby:3.0.2
 
 ENV PATH /root/.yarn/bin:$PATH
 
