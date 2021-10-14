@@ -36,6 +36,11 @@ updated `gitignore` to ensure secrets stay out of git
 	* via s3 (private bucket but public read on the file): https://s3.amazonaws.com/s3-website-explorer-private.test.com/static/batman.html
 	* via cloudfront: https://d3oohdglm7snik.cloudfront.net/static/batman.html   
 
+### Setup
+
+The setup and run expects you to be in the sandbox_tools folder not the root of
+
+
 ### Secrets
 
 The original project had all the files with secrets checked in... These are no longer in git and are gitignored. To enable the project to run please copy over the sample files and then edit to add various secrets.
